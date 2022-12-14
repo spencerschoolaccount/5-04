@@ -14,6 +14,8 @@ displayHeight = 600
 gameDisplay = pygame.display.set_mode((displayWidth,displayHeight))
 pygame.display.set_caption('Slither')
 
+img = pygame.image.load('snakehead.png')
+
 clock = pygame.time.Clock()
 
 blockSize = 20
@@ -22,12 +24,22 @@ FPS = 15
 font = pygame.font.SysFont(None, 25)
 
 def snake(blockSize, snakelist):
-	for XnY in snakelist:
+
+	gameDisplay.blit(img, (snakelist[-1][0], (snakelist[-1][1])))
+	
+	for XnY in snakelist[:-1]:
 		pygame.draw.rect(gameDisplay, green, [XnY[0],XnY[1],blockSize,blockSize])
 
+def textobjects(text,colour):
+	textSurface = font.render(text, True, colour)
+	return textSurface, textSurface.get_rect()
+
 def messagetoscreen(msg,colour):
-	screenText = font.render(msg, True, colour)
-	gameDisplay.blit(screenText, [displayWidth/2, displayHeight/2])
+	textSurf, textRect = textobjects(msg, colour)
+#	screenText = font.render(msg, True, colour)
+#	gameDisplay.blit(screenText, [displayWidth/2, displayHeight/2])
+	textRect.center = (displayWidth / 2), (displayHeight / 2)
+	gameDisplay.blit(textSurf,textRect)
 
 def gameloop():
 	gameExit = False
@@ -41,7 +53,7 @@ def gameloop():
 
 	snakeList = []
 	snakeLength = 1
-	appleThickness = 30
+	appleThickness = 20
 
 	randAppleX = round(random.randrange(0,displayWidth-blockSize)/10)*10
 	randAppleY = round(random.randrange(0,displayHeight-blockSize)/10)*10
@@ -112,7 +124,7 @@ def gameloop():
 #			randAppleY = round(random.randrange(0,displayHeight-blockSize)/10)*10
 #			snakeLength += 1
 		
-		if (lead_x in range(randAppleX,randAppleX+appleThickness) or (lead_x + blockSize) in range(randAppleX,randAppleX+appleThickness)) and (lead_y in range(randAppleY,randAppleY+appleThickness) or (lead_y + blockSize) in range(randAppleY,randAppleY+appleThickness)):
+		if (lead_x in range(randAppleX,randAppleX+appleThickness) or (lead_x + blockSize-1) in range(randAppleX,randAppleX+appleThickness)) and (lead_y in range(randAppleY,randAppleY+appleThickness) or (lead_y + blockSize-1) in range(randAppleY,randAppleY+appleThickness)):
 			randAppleX = round(random.randrange(0,displayWidth-blockSize)/10)*10
 			randAppleY = round(random.randrange(0,displayHeight-blockSize)/10)*10
 			snakeLength += 1
